@@ -1,0 +1,8 @@
+{
+  "name": "burton",
+  "version": "0.1.0",
+  "main": "resources/main.js",
+  "dependencies": {
+    "npm": "^5.7.1"
+  }
+}
