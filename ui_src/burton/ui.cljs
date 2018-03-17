@@ -1,14 +1,15 @@
-(ns ui.core
-  (:require [reagent.core :as reagent :refer [atom]]
-            [clojure.string :as string :refer [split-lines]]))
+(ns burton.ui
+  (:require
+    [reagent.core :as reagent :refer [atom]]
+    [clojure.string :as string :refer [split-lines]]))
 
 (def join-lines (partial string/join "\n"))
 
 (enable-console-print!)
 
-(defonce state        (atom 0))
+(defonce state (atom 0))
 (defonce shell-result (atom ""))
-(defonce command      (atom ""))
+(defonce command (atom ""))
 
 (defonce proc (js/require "child_process"))
 

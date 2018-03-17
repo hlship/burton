@@ -9,21 +9,21 @@
   :plugins [[lein-cljsbuild "1.1.7"]]
 
   :clean-targets ^{:protect false} ["resources/main.js"
-                                    "resources/public/js/ui-core.js"
-                                    "resources/public/js/ui-core.js.map"
+                                    "resources/public/js/electron-dev"
+                                    "resources/public/js/ui.*"
                                     "resources/public/js/ui-out"]
   :cljsbuild
   {:builds
-   [{:source-paths ["electron_src"]
+   [{:source-paths ["electron_src" "script"]
      :id "electron-dev"
      :compiler {:output-to "resources/main.js"
                 :output-dir "resources/public/js/electron-dev"
                 :optimizations :simple
                 :pretty-print true
                 :cache-analysis true}}
-    {:source-paths ["ui_src" "dev_src" "script"]
+    {:source-paths ["ui_src" "dev_src" ]
      :id "frontend-dev"
-     :compiler {:output-to "resources/public/js/ui-core.js"
+     :compiler {:output-to "resources/public/js/ui.js"
                 :output-dir "resources/public/js/ui-out"
                 :source-map true
                 :asset-path "js/ui-out"
@@ -40,13 +40,13 @@
                 :infer-externs true}}
     {:source-paths ["ui_src"]
      :id "frontend-release"
-     :compiler {:output-to "resources/public/js/ui-core.js"
+     :compiler {:output-to "resources/public/js/ui.js"
                 :output-dir "resources/public/js/ui-release-out"
-                :source-map "resources/public/js/ui-core.js.map"
+                :source-map "resources/public/js/ui.js.map"
                 :optimizations :advanced
                 :cache-analysis true
                 :infer-externs true
-                :main "ui.core"}}]}
+                :main "burton.ui"}}]}
   :figwheel {:http-server-root "public"
              :css-dirs ["resources/public/css"]
              :ring-handler tools.figwheel-middleware/app
