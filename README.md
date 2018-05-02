@@ -7,7 +7,8 @@ You need three windows.  Two can be inside the IDE, but one must be native Termi
 ### electron-dev
 
 ```
-~```
+lein cljsbuild auto electron-dev
+```
 
 This builds (and re-builds) the Electron application itself.
 This is not where you do most of your work, mostly (AFAIK) it exists to launch the UI.
