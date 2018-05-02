@@ -40,7 +40,7 @@
     [:p (str "Chromium " ((js->clj js/process.versions) "chrome"))]]
    [:button
     {:on-click #(swap! state inc)}
-    (str "Clicked " @state " times")]
+      (str "Clicks " @state)]
    [:p
     [:form
      {:on-submit (fn [^js/Event e]

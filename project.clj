@@ -1,12 +1,14 @@
 (defproject burton "0.1.0-SNAPSHOT"
   :source-paths ["src"]
   :description "Explore dependencies visually."
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.293"]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.10.238"]
                  [figwheel-sidecar "0.5.15"]
                  [reagent "0.7.0"]
+                 [figwheel "0.5.15"]
                  [ring/ring-core "1.6.3"]]
-  :plugins [[lein-cljsbuild "1.1.7"]]
+  :plugins [[lein-cljsbuild "1.1.7"]
+            [lein-figwheel "0.5.15"]]
 
   :clean-targets ^{:protect false} ["resources/main.js"
                                     "resources/public/js/electron-dev"
