@@ -1,0 +1,7 @@
+;; Sample input file to Burton
+
+{:top {:deps [:mid1 :mid2]}
+ :mid1 {:deps [:mid2 :bottom2]}
+ :mid2 {:deps [:bottom1 :bottom2]}
+ :bottom1 {}
+ :bottom2 {:deps [:bottom1]}}
