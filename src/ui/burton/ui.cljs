@@ -3,13 +3,14 @@
     [reagent.core :as reagent :refer [atom]]
     [burton.main :refer [*main-window]]
     [burton.plex :refer [plex-component]]
+    [cljs.reader :as edn]
     [re-frame.core :as rf])
   (:require-macros [burton.utils :as u]))
 
 (enable-console-print!)
 
 (def electron (js/require "electron"))
-
+(def fs (js/require "fs"))
 
 (defn root-component
   []
@@ -27,19 +28,49 @@
      (when @*loaded-file
        [:a.btn.btn-primary.btn-block {:on-click (u/dispatch [::unload-file])} "Reset"])]))
 
-(rf/reg-event-db :load-file
-                 (fn [db [_ file-name]]
-                   (assoc db ::loaded-file file-name)))
+(rf/reg-event-fx
+  :load-file
+  (fn [{:keys [db]} [_ file-name]]
+    (js/console.log "Loading: " file-name)
+    {:db (assoc db ::loaded-file file-name
+                   ::model-data nil)
+     ::read-and-parse-file {:path file-name
+                            :on-success [::model-data-loaded]
+                            :on-failure [:not-yet-implemented]}
+     }))
 
 ;; Temporary:
-(rf/reg-event-db ::unload-file
-                 (fn [db _]
-                   (dissoc db ::loaded-file)))
+(rf/reg-event-db
+  ::unload-file
+  (fn [db _]
+    (dissoc db ::loaded-file ::model-data)))
+
+(rf/reg-event-db
+  ::model-data-loaded
+  (fn [db [_ model-data :as event]]
+    (assoc db ::model-data model-data)))
+
+(rf/reg-sub :model-data
+            (fn [db _]
+              (::model-data db)))
 
 (rf/reg-sub
   :loaded-file
   (fn [db _]
     (::loaded-file db)))
+
+(rf/reg-fx
+  ::read-and-parse-file
+  (fn [options]
+    (let [{:keys [path on-success on-failure]} options]
+      (.readFile fs path
+                 (fn [err data]
+                   (rf/dispatch
+                     (if err
+                       (conj on-failure err)
+                       ;; Putting a try here causes a Figwheel error!
+                       ;; The data may be a string or a Node Buffer
+                       (conj on-success (edn/read-string (str data))))))))))
 
 (rf/reg-event-fx
   :select-file
@@ -52,7 +83,7 @@
                                    :filters [{:name "EDN" :extensions ["edn"]}]
                                    :properties ["openFile" "showHiddenFiles"]})
                          (fn [filename]
-                           (rf/dispatch [:load-file filename]))))))
+                           (rf/dispatch [:load-file (first filename)]))))))
 
 (reagent/render
   [root-component]
